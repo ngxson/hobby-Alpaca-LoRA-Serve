@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { translate } = require('bing-translate-api');
+const { translate, clearCookie } = require('./bing-translate-api');
 const alpaca_data_cleaned = require('./alpaca_data_cleaned.json');
 const randomUseragent = require('random-useragent');
 
@@ -34,18 +34,19 @@ const translateENtoVI = async (text) => {
   for (const p of paragraphs) {
     while (true) {
       try {
-        const { translation } = await translate(p, 'en', 'vi', false, false, ua);
-        res.push(translation);
+        const trans_res = await translate(p, 'en', 'vi', false, false, ua);
+        if (trans_res) res.push(trans_res.translation);
         break;
       } catch (e) {
-        console.error(e);
+        console.error(e.toString());
         j++;
         ua = randomUseragent.getRandom();
         if (j === 5) return null;
-        await delay(randomIntFromInterval(50000, 80000));
+        clearCookie()
+        await delay(randomIntFromInterval(5000, 6000));
       }
     }
-    await delay(randomIntFromInterval(5000, 10000));
+    await delay(randomIntFromInterval(1000, 2000));
   }
   return res.join(' ');
 };
@@ -94,6 +95,7 @@ const run = async () => {
       }
       //console.log(to_be_trans, res, vi_dialog);
       console.log(vi_dialog);
+      console.log(`${i}/${alpaca_data_cleaned.length} (${Math.round(i*100/alpaca_data_cleaned.length)}%)`)
       fs.appendFileSync('./_tmp', JSON.stringify(vi_dialog, null, 2) + ',');
     } else {
       console.log("========== ERROR ==========");

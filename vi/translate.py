@@ -51,7 +51,7 @@ def generate_messages(value):
         # {"role": "user", "content": f"Translate the following text from English to French: '{value}'"},
         {
             "role": "user",
-            "content": f"""Please translate the following text from English into French without providing any explanation, while maintaining the format and ensuring faithful translation. It is crucial that the translation work is done accurately.
+            "content": f"""Please translate the following text from English into Vietnamese without providing any explanation, while maintaining the format and ensuring faithful translation. It is crucial that the translation work is done accurately.
 This is the text:
 > {value}""",
         },

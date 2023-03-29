@@ -3,6 +3,8 @@ const { translate, clearCookie } = require('./bing-translate-api');
 const alpaca_data_cleaned = require('./alpaca_data_cleaned.json');
 const randomUseragent = require('random-useragent');
 
+const SKIP = parseInt(process.env.SKIP || '0');
+
 let ua = randomUseragent.getRandom();
 
 if (!fs.existsSync('./_tmp')) fs.writeFileSync('./_tmp', '');
@@ -63,7 +65,7 @@ const shouldSkip = (text) => {
 const run = async () => {
   let i = -1;
   for (const dialog of alpaca_data_cleaned) {
-    i++; if (i < _tmp_done.length) continue;
+    i++; if (i < (_tmp_done.length + SKIP)) continue;
 
     const { instruction, input, output } = dialog;
     const pre = [];
